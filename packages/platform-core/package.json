@@ -1,11 +1,11 @@
 {
   "name": "@nexora/platform-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "main": "src/index.js",
   "scripts": {
-    "build": "node -e \"console.log('build: platform-core')\"",
-    "lint": "node -e \"console.log('lint: platform-core')\"",
-    "test": "node -e \"console.log('test: platform-core')\""
+    "build": "node --check src/index.js",
+    "lint": "node --check src/index.js",
+    "test": "node --test test/platformCore.test.js"
   }
 }

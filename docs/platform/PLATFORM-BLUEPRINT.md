@@ -66,3 +66,12 @@ Assistant
 - [CONTROL-CENTER-ROADMAP.md](CONTROL-CENTER-ROADMAP.md)
 - [SDK-ROADMAP.md](SDK-ROADMAP.md)
 - [../adr/ADR-006-nexora-platform.md](../adr/ADR-006-nexora-platform.md)
+
+## v0.2.0 Platform Core Extraction
+
+- Extração do primeiro pacote real reutilizavel: @nexora/platform-core.
+- Contratos publicos definidos para App Registry, Context Provider e Platform Service.
+- Registry inicial com 7 apps da plataforma e validacao de projectKey unico.
+- Contexto multi-app desacoplado de framework e persistencia.
+- Testes reais em node:test cobrindo registry, contexto, status e dashboard por app.
+- Nenhuma migracao do App Associações nesta fase.
