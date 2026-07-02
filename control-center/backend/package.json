@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/control-center-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: control-center-backend')\"",
+    "lint": "node -e \"console.log('lint: control-center-backend')\"",
+    "test": "node -e \"console.log('test: control-center-backend')\""
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/ai-core",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: ai-core')\"",
+    "lint": "node -e \"console.log('lint: ai-core')\"",
+    "test": "node -e \"console.log('test: ai-core')\""
+  }
+}

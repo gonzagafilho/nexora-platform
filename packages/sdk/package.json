@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/sdk",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: sdk')\"",
+    "lint": "node -e \"console.log('lint: sdk')\"",
+    "test": "node -e \"console.log('test: sdk')\""
+  }
+}

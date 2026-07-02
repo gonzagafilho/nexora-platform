@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/app-workponto",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: app-workponto')\"",
+    "lint": "node -e \"console.log('lint: app-workponto')\"",
+    "test": "node -e \"console.log('test: app-workponto')\""
+  }
+}

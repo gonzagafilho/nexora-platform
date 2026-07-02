@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/control-center-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: control-center-frontend')\"",
+    "lint": "node -e \"console.log('lint: control-center-frontend')\"",
+    "test": "node -e \"console.log('test: control-center-frontend')\""
+  }
+}

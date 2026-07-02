@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/runtime",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: runtime')\"",
+    "lint": "node -e \"console.log('lint: runtime')\"",
+    "test": "node -e \"console.log('test: runtime')\""
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/audit",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: audit')\"",
+    "lint": "node -e \"console.log('lint: audit')\"",
+    "test": "node -e \"console.log('test: audit')\""
+  }
+}

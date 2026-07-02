@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/events",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: events')\"",
+    "lint": "node -e \"console.log('lint: events')\"",
+    "test": "node -e \"console.log('test: events')\""
+  }
+}

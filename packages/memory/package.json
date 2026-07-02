@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/memory",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: memory')\"",
+    "lint": "node -e \"console.log('lint: memory')\"",
+    "test": "node -e \"console.log('test: memory')\""
+  }
+}

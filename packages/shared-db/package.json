@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/shared-db",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: shared-db')\"",
+    "lint": "node -e \"console.log('lint: shared-db')\"",
+    "test": "node -e \"console.log('test: shared-db')\""
+  }
+}

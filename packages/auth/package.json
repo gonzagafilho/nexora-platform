@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/auth",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: auth')\"",
+    "lint": "node -e \"console.log('lint: auth')\"",
+    "test": "node -e \"console.log('test: auth')\""
+  }
+}

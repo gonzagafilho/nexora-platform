@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/app-chatbot",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: app-chatbot')\"",
+    "lint": "node -e \"console.log('lint: app-chatbot')\"",
+    "test": "node -e \"console.log('test: app-chatbot')\""
+  }
+}

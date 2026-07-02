@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/app-associacoes",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: app-associacoes')\"",
+    "lint": "node -e \"console.log('lint: app-associacoes')\"",
+    "test": "node -e \"console.log('test: app-associacoes')\""
+  }
+}

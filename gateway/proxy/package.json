@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/gateway-proxy",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: gateway-proxy')\"",
+    "lint": "node -e \"console.log('lint: gateway-proxy')\"",
+    "test": "node -e \"console.log('test: gateway-proxy')\""
+  }
+}

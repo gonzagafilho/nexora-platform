@@ -1,0 +1,8 @@
+packages:
+  - apps/*
+  - packages/*
+  - control-center/frontend
+  - control-center/backend
+  - gateway/api
+  - gateway/proxy
+  - sdk/javascript

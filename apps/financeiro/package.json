@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/app-financeiro",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: app-financeiro')\"",
+    "lint": "node -e \"console.log('lint: app-financeiro')\"",
+    "test": "node -e \"console.log('test: app-financeiro')\""
+  }
+}

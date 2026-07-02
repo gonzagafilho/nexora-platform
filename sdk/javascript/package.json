@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/sdk-javascript",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: sdk-javascript')\"",
+    "lint": "node -e \"console.log('lint: sdk-javascript')\"",
+    "test": "node -e \"console.log('test: sdk-javascript')\""
+  }
+}

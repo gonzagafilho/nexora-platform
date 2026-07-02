@@ -1,0 +1,11 @@
+{
+  "name": "@nexora/skills",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node -e \"console.log('build: skills')\"",
+    "lint": "node -e \"console.log('lint: skills')\"",
+    "test": "node -e \"console.log('test: skills')\""
+  }
+}

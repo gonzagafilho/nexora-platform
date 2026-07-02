@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/app-xpdcnet",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: app-xpdcnet')\"",
+    "lint": "node -e \"console.log('lint: app-xpdcnet')\"",
+    "test": "node -e \"console.log('test: app-xpdcnet')\""
+  }
+}

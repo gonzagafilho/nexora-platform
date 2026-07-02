@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/app-palpites",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: app-palpites')\"",
+    "lint": "node -e \"console.log('lint: app-palpites')\"",
+    "test": "node -e \"console.log('test: app-palpites')\""
+  }
+}

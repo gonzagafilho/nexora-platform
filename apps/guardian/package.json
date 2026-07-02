@@ -1,0 +1,10 @@
+{
+  "name": "@nexora/app-guardian",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('build: app-guardian')\"",
+    "lint": "node -e \"console.log('lint: app-guardian')\"",
+    "test": "node -e \"console.log('test: app-guardian')\""
+  }
+}
