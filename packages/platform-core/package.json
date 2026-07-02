@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "node --check src/index.js",
+    "independence": "! grep -R -n -E 'associacao-bolepix|backend/src|express|mongoose|mongodb|pm2' src test",
     "lint": "node --check src/index.js",
     "test": "node --test test/platformCore.test.js"
   }
