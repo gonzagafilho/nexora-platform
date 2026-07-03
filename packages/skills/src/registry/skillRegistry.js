@@ -17,6 +17,10 @@ function createSkillRegistry(options = {}) {
     const normalizedSkill = {
       ...skill,
       name: normalizedName,
+      toolId: skill.toolId || normalizedName,
+      toolName: skill.toolName || normalizedName,
+      toolCategory: skill.toolCategory || skill.category,
+      toolDescription: skill.toolDescription || skill.description,
       enabled: skill.enabled !== false
     };
     registry.set(normalizedName, normalizedSkill);
@@ -49,6 +53,36 @@ function createSkillRegistry(options = {}) {
     return list().filter((skill) => skill.category === category);
   }
 
+  function listTools() {
+    return list();
+  }
+
+  function getTool(name) {
+    return get(name);
+  }
+
+  function searchTools(query = "") {
+    const normalizedQuery = String(query || "").trim().toLowerCase();
+    if (!normalizedQuery) {
+      return listTools();
+    }
+
+    return listTools().filter((tool) => {
+      const haystack = [
+        tool.name,
+        tool.description,
+        tool.category,
+        tool.toolName,
+        tool.toolDescription,
+        tool.toolCategory
+      ]
+        .map((value) => String(value || "").toLowerCase())
+        .join(" ");
+
+      return haystack.includes(normalizedQuery);
+    });
+  }
+
   function enable(name) {
     const skill = get(name);
     if (!skill) {
@@ -76,6 +110,9 @@ function createSkillRegistry(options = {}) {
     has,
     list,
     listByCategory,
+    listTools,
+    getTool,
+    searchTools,
     enable,
     disable,
     validate,

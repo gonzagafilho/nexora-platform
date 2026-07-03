@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   createSkillRegistry,
+  createToolExecutor,
   createSkillExecutor,
   createInMemorySkillAdapter,
   createNoopSkillAdapter,
@@ -181,5 +182,14 @@ test("normalizeSkillName aplicado no executor", async () => {
   const executor = createSkillExecutor({ registry });
 
   const result = await executor.execute("  FINANCE.GETINVOICE  ", {}, createContext());
+  assert.equal(result.ok, true);
+});
+
+test("createToolExecutor funciona como alias do executor", async () => {
+  const registry = createSkillRegistry();
+  registerSkill(registry);
+  const executor = createToolExecutor({ registry });
+
+  const result = await executor.execute("finance.getinvoice", {}, createContext());
   assert.equal(result.ok, true);
 });

@@ -6,6 +6,11 @@ Skills Engine independente da NEXORA Platform v0.5.0.
 
 Fornecer uma camada generica de skills com contrato, registry, executor, policy, eventos e adapters plugaveis.
 
+Equivalencia arquitetural:
+
+- Skills = Tools da plataforma
+- Skill = Tool (alias conceitual)
+
 ## Arquitetura
 
 - contracts: skill, executor e adapter contracts.
@@ -48,6 +53,9 @@ API:
 - has
 - list
 - listByCategory
+- listTools
+- getTool
+- searchTools
 - enable
 - disable
 - validate
@@ -106,10 +114,19 @@ Eventos internos:
 
 ## Integracao futura
 
-- AI Core chama skills por contrato.
+- AI Core consome apenas Tool Registry (sem conhecer skills especificas).
 - Orchestrator executa skills via executor.
 - Apps fornecem adapters reais.
 - Skills nao conhecem apps diretamente.
+
+Essa decisao prepara integracao com:
+
+- AI Core
+- Orchestrator
+- Runtime
+- Control Center
+- CLI
+- Marketplace
 
 ## Exemplo de uso
 
@@ -117,6 +134,8 @@ Eventos internos:
 const {
 	createSkillRegistry,
 	createSkillExecutor,
+	createToolRegistry,
+	createToolExecutor,
 	createFinanceSkill
 } = require("@nexora/skills");
 
@@ -124,4 +143,8 @@ const registry = createSkillRegistry();
 createFinanceSkill().forEach((skill) => registry.register(skill));
 
 const executor = createSkillExecutor({ registry });
+
+// Alias conceitual: Tool Registry/Tool Executor
+const toolRegistry = createToolRegistry();
+const toolExecutor = createToolExecutor({ registry: toolRegistry });
 ```

@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { createSkillRegistry, SKILL_EVENTS } = require("../src");
+const { createSkillRegistry, createToolRegistry, SKILL_EVENTS } = require("../src");
 
 function sampleSkill(overrides = {}) {
   return {
@@ -39,6 +39,33 @@ test("listByCategory filtra categoria", () => {
 
   assert.equal(registry.listByCategory("finance").length, 1);
   assert.equal(registry.listByCategory("associate").length, 1);
+});
+
+test("listTools e getTool funcionam como alias", () => {
+  const registry = createToolRegistry();
+  registry.register(sampleSkill());
+
+  assert.equal(registry.listTools().length, 1);
+  assert.ok(registry.getTool("finance.getinvoice"));
+});
+
+test("searchTools busca por nome e descricao", () => {
+  const registry = createSkillRegistry();
+  registry.register(sampleSkill({ description: "Consulta invoice financeira" }));
+  registry.register(sampleSkill({ name: "associate.find", category: "associate", description: "Busca associado" }));
+
+  assert.equal(registry.searchTools("invoice").length, 1);
+  assert.equal(registry.searchTools("associado").length, 1);
+});
+
+test("skill registrada expoe metadados de tool", () => {
+  const registry = createSkillRegistry();
+  const created = registry.register(sampleSkill());
+
+  assert.equal(created.toolId, "finance.getinvoice");
+  assert.equal(created.toolName, "finance.getinvoice");
+  assert.equal(created.toolCategory, "finance");
+  assert.equal(created.toolDescription, "Get invoice");
 });
 
 test("enable e disable skill", () => {

@@ -1,5 +1,7 @@
 const { createSkillRegistry } = require("./registry/skillRegistry");
+const { createToolRegistry } = require("./registry/toolRegistry");
 const { createSkillExecutor } = require("./executor/skillExecutor");
+const { createToolExecutor } = require("./executor/toolExecutor");
 const { createSkillEventEmitter } = require("./events/skillEventEmitter");
 const { createInMemorySkillAdapter } = require("./adapters/inMemorySkillAdapter");
 const { createNoopSkillAdapter } = require("./adapters/noopAdapter");
@@ -22,7 +24,9 @@ const { SkillValidationError } = require("./errors/SkillValidationError");
 
 module.exports = {
   createSkillRegistry,
+  createToolRegistry,
   createSkillExecutor,
+  createToolExecutor,
   createSkillEventEmitter,
   createInMemorySkillAdapter,
   createNoopSkillAdapter,

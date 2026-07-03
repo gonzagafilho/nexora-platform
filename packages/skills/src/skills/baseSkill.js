@@ -10,6 +10,12 @@ class BaseSkill {
     this.inputSchema = definition.inputSchema || {};
     this.outputSchema = definition.outputSchema || {};
     this.execute = definition.execute;
+
+    // Skill = Tool alias for platform-wide interoperability.
+    this.toolId = definition.toolId || definition.name;
+    this.toolName = definition.toolName || definition.name;
+    this.toolCategory = definition.toolCategory || definition.category;
+    this.toolDescription = definition.toolDescription || definition.description;
   }
 }
 
