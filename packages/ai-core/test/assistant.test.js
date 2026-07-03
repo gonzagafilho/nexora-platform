@@ -65,3 +65,43 @@ test("assistant utiliza memory bridge para salvar memoria", async () => {
   assert.equal(calls.resolveMemory, 1);
   assert.equal(calls.saveMemory, 1);
 });
+
+test("assistant engine usa somente provider.execute", async () => {
+  let executeCalls = 0;
+  const provider = {
+    name: "generic-provider",
+    async execute(prompt) {
+      executeCalls += 1;
+      return {
+        text: `ok:${prompt.length}`,
+        usage: { promptTokens: 1, completionTokens: 1, totalTokens: 2 },
+        metadata: { provider: "generic-provider" }
+      };
+    },
+    async health() {
+      return { status: "up" };
+    },
+    capabilities() {
+      return ["chat"];
+    },
+    async generate() {
+      throw new Error("generate must never be called");
+    }
+  };
+
+  const assistant = createAssistant({ provider });
+  const result = await assistant.run({
+    message: "teste provider execute",
+    context: { userId: "u-1" }
+  });
+
+  assert.equal(executeCalls, 1);
+  assert.ok(result.response.startsWith("ok:"));
+});
+
+test("assistant rejeita provider sem contrato generico", () => {
+  assert.throws(
+    () => createAssistant({ provider: { name: "bad", execute: async () => ({ text: "x" }) } }),
+    { name: "ProviderError", code: "INVALID_PROVIDER_HEALTH" }
+  );
+});

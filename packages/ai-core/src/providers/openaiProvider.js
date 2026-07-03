@@ -9,18 +9,19 @@ function createOpenAIProvider(options = {}) {
   }
 
   const name = options.name || "openai";
+  const declaredCapabilities = options.capabilities || ["chat", "tool-calling", "summarization"];
 
   return {
     name,
-    async generate(input) {
-      if (!input || typeof input.prompt !== "string") {
+    async execute(prompt, context = {}) {
+      if (typeof prompt !== "string") {
         throw new ProviderError("OpenAI provider requires a string prompt", "INVALID_PROMPT");
       }
 
       const response = await options.invoke({
-        prompt: input.prompt,
-        context: input.context || {},
-        config: input.config || {}
+        prompt,
+        context: context.context || {},
+        config: context.config || {}
       });
 
       if (!response || typeof response.text !== "string") {
@@ -40,6 +41,15 @@ function createOpenAIProvider(options = {}) {
           raw: response.raw || null
         }
       };
+    },
+    async health() {
+      return {
+        status: "up",
+        provider: name
+      };
+    },
+    capabilities() {
+      return [...declaredCapabilities];
     }
   };
 }

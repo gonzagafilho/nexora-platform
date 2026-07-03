@@ -38,12 +38,22 @@ const {
 O registry suporta providers com interface simples:
 
 - `name: string`
-- `generate(input): Promise<{ text, usage, metadata }>`
+- `execute(prompt, context): Promise<{ text, usage, metadata }>`
+- `health(): Promise<{ status, ... }>`
+- `capabilities(): string[]`
 
 Implementados nesta fase:
 
 - `mockProvider`
 - `openaiProvider` (adapter)
+
+Estrutura pronta para adicionar sem alterar o Assistant Engine:
+
+- `anthropicProvider`
+- `geminiProvider`
+- `ollamaProvider`
+- `azureOpenAIProvider`
+- `deepseekProvider`
 
 O `openaiProvider` nao depende de SDK OpenAI. Ele recebe uma funcao `invoke`:
 

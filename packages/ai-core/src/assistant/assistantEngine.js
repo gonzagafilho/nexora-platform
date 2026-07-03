@@ -7,6 +7,7 @@ const { createIntentDetector } = require("../planner/intentDetector");
 const { createContextResolver } = require("../planner/contextResolver");
 const { createResponsePlanner } = require("../planner/responsePlanner");
 const { createCopilot } = require("../copilot/copilotEngine");
+const { assertProvider } = require("../contracts/providerContract");
 const { DEFAULT_CONFIG } = require("../config/defaults");
 
 function createAssistant(options = {}) {
@@ -16,9 +17,7 @@ function createAssistant(options = {}) {
   const responsePlanner = options.responsePlanner || createResponsePlanner();
   const provider = options.provider;
 
-  if (!provider || typeof provider.generate !== "function") {
-    throw new Error("Assistant requires a provider with generate(input)");
-  }
+  assertProvider(provider);
 
   const copilot = createCopilot({
     provider,

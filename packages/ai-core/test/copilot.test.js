@@ -56,3 +56,29 @@ test("copilot valida entrada invalida", async () => {
     code: "INVALID_COPILOT_MESSAGE"
   });
 });
+
+test("copilot usa capacidades do provider", async () => {
+  const provider = {
+    name: "cap-provider",
+    async execute() {
+      return {
+        text: "ok",
+        usage: null,
+        metadata: { provider: "cap-provider" }
+      };
+    },
+    async health() {
+      return { status: "up" };
+    },
+    capabilities() {
+      return ["chat", "reasoning"];
+    }
+  };
+
+  const copilot = createCopilot({ provider });
+  const result = await copilot.run({ message: "oi", skills: ["finance"] });
+
+  assert.ok(result.metadata.capabilities.includes("chat"));
+  assert.ok(result.metadata.capabilities.includes("reasoning"));
+  assert.ok(result.metadata.capabilities.includes("finance"));
+});

@@ -1,4 +1,5 @@
 const { ProviderError } = require("../errors/ProviderError");
+const { assertProvider } = require("../contracts/providerContract");
 const { createMockProvider } = require("./mockProvider");
 const { createOpenAIProvider } = require("./openaiProvider");
 
@@ -6,12 +7,7 @@ function createProviderRegistry(initialProviders = []) {
   const providers = new Map();
 
   function registerProvider(provider) {
-    if (!provider || typeof provider.name !== "string" || typeof provider.generate !== "function") {
-      throw new ProviderError(
-        "Provider must expose name and generate(input)",
-        "INVALID_PROVIDER"
-      );
-    }
+    assertProvider(provider);
 
     providers.set(provider.name, provider);
     return provider;
@@ -42,6 +38,7 @@ function createProviderRegistry(initialProviders = []) {
     getProvider,
     hasProvider,
     listProviders,
+    checkProviderHealth: async (name) => getProvider(name).health(),
     createOpenAIProvider,
     createMockProvider
   };

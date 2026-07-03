@@ -1,4 +1,5 @@
 const { assertCopilotInput } = require("../contracts/copilotContract");
+const { assertProvider } = require("../contracts/providerContract");
 const { createPromptBuilder } = require("./promptBuilder");
 const { createConversation } = require("./conversation");
 
@@ -8,11 +9,13 @@ function createCopilot(options = {}) {
   const conversation = options.conversation || createConversation();
   const capabilitiesResolver =
     options.capabilitiesResolver ||
-    ((input) => Array.isArray(input.skills) ? input.skills : []);
+    ((input) => {
+      const skillCapabilities = Array.isArray(input.skills) ? input.skills : [];
+      const providerCapabilities = provider.capabilities();
+      return [...providerCapabilities, ...skillCapabilities];
+    });
 
-  if (!provider || typeof provider.generate !== "function") {
-    throw new Error("Copilot requires a provider with generate(input)");
-  }
+  assertProvider(provider);
 
   async function run(input = {}) {
     assertCopilotInput(input);
@@ -26,8 +29,7 @@ function createCopilot(options = {}) {
       history: conversation.listMessages()
     });
 
-    const result = await provider.generate({
-      prompt,
+    const result = await provider.execute(prompt, {
       context: input.context || {},
       config: input.config || {}
     });
