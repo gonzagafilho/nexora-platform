@@ -9,10 +9,17 @@ Fornecer um motor de memoria generico, sem dependencias de framework web, banco 
 ## Arquitetura
 
 - `contracts`: contrato de adapter e record.
-- `adapters`: implementacoes plugaveis (`inMemory`, `noop`).
-- `engine`: API principal, policy, normalizacao e contexto.
+- `adapters`: persistencia plugavel (`inMemory`, `noop`).
+- `engine`: politicas, ranking, contexto e eventos da memoria.
+- `events`: emitter interno e catalogo de eventos logicos.
 - `retrieval`: busca textual, tags, ranking e context window.
 - `bridge`: integracao por contrato com AI Core.
+
+Separacao clara:
+
+- Memory Adapter = persistencia
+- Memory Engine = politicas, ranking, contexto e eventos
+- Event Emitter = trilha logica interna
 
 ## Contratos
 
@@ -59,6 +66,24 @@ Implementado nesta fase:
 - `saveMemory(record, context)`
 
 Sem acoplamento direto ao `@nexora/ai-core`.
+
+## Memory Events
+
+Eventos internos suportados:
+
+- `MemoryCreated`
+- `MemoryUpdated`
+- `MemoryDeleted`
+- `MemoryExpired`
+- `MemoryAccessed`
+- `MemoryRemembered`
+- `MemoryForgotten`
+- `MemoryContextBuilt`
+
+Exports:
+
+- `createMemoryEventEmitter`
+- `MEMORY_EVENTS`
 
 ## Exemplo
 

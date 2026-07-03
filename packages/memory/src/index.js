@@ -2,6 +2,8 @@ const { createMemoryEngine } = require("./engine/memoryEngine");
 const { createInMemoryAdapter } = require("./adapters/inMemoryAdapter");
 const { createNoopAdapter } = require("./adapters/noopAdapter");
 const { createAIMemoryBridge } = require("./bridge/aiMemoryBridge");
+const { createMemoryEventEmitter } = require("./events/memoryEventEmitter");
+const { MEMORY_EVENTS } = require("./events/memoryEvents");
 const { normalizeMemory } = require("./engine/memoryNormalizer");
 const { rankMemories } = require("./retrieval/relevanceRanker");
 const { searchByText } = require("./retrieval/textSearch");
@@ -17,6 +19,7 @@ module.exports = {
   createInMemoryAdapter,
   createNoopAdapter,
   createAIMemoryBridge,
+  createMemoryEventEmitter,
   normalizeMemory,
   rankMemories,
   searchByText,
@@ -24,6 +27,7 @@ module.exports = {
   buildMemoryContext,
   MEMORY_VERSION,
   MemoryError,
+  MEMORY_EVENTS,
   validateMemoryAdapter,
   validateMemoryRecord
 };
