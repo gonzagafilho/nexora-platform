@@ -1,31 +1,11 @@
+const { getExecutionLevels } = require("../planner/planGraph");
+
 function topologicalBatches(steps) {
-  const byId = new Map(steps.map((step) => [step.id, step]));
-  const unresolved = new Set(steps.map((step) => step.id));
-  const resolved = new Set();
-  const batches = [];
-
-  while (unresolved.size > 0) {
-    const ready = Array.from(unresolved)
-      .map((id) => byId.get(id))
-      .filter((step) => (step.dependsOn || []).every((dependencyId) => resolved.has(dependencyId)));
-
-    if (ready.length === 0) {
-      break;
-    }
-
-    ready.forEach((step) => {
-      unresolved.delete(step.id);
-      resolved.add(step.id);
-    });
-
-    batches.push(ready);
-  }
-
-  return batches;
+  return getExecutionLevels({ steps });
 }
 
 async function runParallel(steps, runStep) {
-  const batches = topologicalBatches(steps);
+  const batches = getExecutionLevels({ steps });
   const results = [];
 
   for (const batch of batches) {

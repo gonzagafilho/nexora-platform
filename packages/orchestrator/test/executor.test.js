@@ -218,3 +218,37 @@ test("eventos pipeline e step emitidos", async () => {
   assert.ok(names.includes(ORCHESTRATOR_EVENTS.STEP_STARTED));
   assert.ok(names.includes(ORCHESTRATOR_EVENTS.STEP_COMPLETED));
 });
+
+test("executor popula journal no pipeline", async () => {
+  const executor = createPipelineExecutor();
+  const plan = normalizePlan({
+    tenantId: "tenant-1",
+    userId: "user-1",
+    steps: [{ id: "s1", tool: "protocol.list" }]
+  });
+
+  const result = await executor.executePlan(plan, context());
+  assert.ok(Array.isArray(result.journal));
+  assert.ok(result.journal.length > 0);
+
+  const pipeline = executor.pipelineStore.get(result.pipelineId);
+  assert.ok(pipeline.journal);
+  assert.ok(pipeline.journal.list().length > 0);
+});
+
+test("falha de policy aparece no journal", async () => {
+  const executor = createPipelineExecutor();
+  const plan = normalizePlan({
+    tenantId: "tenant-1",
+    userId: "user-1",
+    steps: [{ id: "s1", tool: "notification.whatsapp" }]
+  });
+
+  const result = await executor.executePlan(plan, context({ permissions: ["protocol:read"] }));
+  const messages = result.journal.map((entry) => entry.message);
+
+  assert.equal(result.ok, false);
+  assert.ok(messages.includes("Permission Denied"));
+  assert.ok(messages.includes("Step Failed"));
+  assert.ok(messages.includes("Pipeline Failed"));
+});

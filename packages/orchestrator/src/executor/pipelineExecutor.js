@@ -2,6 +2,8 @@ const { createPipelineStore } = require("../pipeline/pipelineStore");
 const { createOrchestratorEventEmitter } = require("../events/orchestratorEventEmitter");
 const { ORCHESTRATOR_EVENTS } = require("../events/orchestratorEvents");
 const { PIPELINE_STATUS } = require("../pipeline/pipelineStatus");
+const { createPipeline } = require("../pipeline/pipelineFactory");
+const { createExecutionJournal } = require("../pipeline/executionJournal");
 const { runSequential } = require("../strategies/sequentialStrategy");
 const { runParallel } = require("../strategies/parallelStrategy");
 const { executeStep } = require("./stepExecutor");
@@ -13,28 +15,32 @@ function createPipelineExecutor(options = {}) {
 
   async function executePlan(plan, context) {
     const startedAt = Date.now();
-
-    const pipeline = {
-      id: plan.id,
-      intent: plan.intent,
-      tenantId: plan.tenantId,
-      userId: plan.userId,
-      projectKey: plan.projectKey,
-      appId: plan.appId,
-      status: PIPELINE_STATUS.CREATED,
-      createdAt: plan.createdAt,
-      steps: plan.steps,
-      events: []
-    };
+    const journal = createExecutionJournal();
+    const pipeline = createPipeline(
+      {
+        ...plan,
+        status: PIPELINE_STATUS.CREATED,
+        events: []
+      },
+      { journal }
+    );
 
     pipelineStore.save(pipeline);
     eventEmitter.emit(ORCHESTRATOR_EVENTS.PIPELINE_CREATED, { pipelineId: pipeline.id });
     eventEmitter.emit(ORCHESTRATOR_EVENTS.PIPELINE_STARTED, { pipelineId: pipeline.id });
+    journal.info("Pipeline Started", { pipelineId: pipeline.id, intent: pipeline.intent });
     pipelineStore.update(pipeline.id, { status: PIPELINE_STATUS.RUNNING });
 
     try {
       applyOrchestratorPolicy(plan, context);
     } catch (error) {
+      if (error.code === "CONFIRMATION_REQUIRED") {
+        journal.warn("Confirmation Required", { pipelineId: pipeline.id, code: error.code });
+      }
+      if (error.code === "PERMISSION_DENIED") {
+        journal.warn("Permission Denied", { pipelineId: pipeline.id, code: error.code });
+      }
+
       const failed = {
         ok: false,
         pipelineId: pipeline.id,
@@ -45,7 +51,8 @@ function createPipelineExecutor(options = {}) {
           code: error.code,
           message: error.message
         },
-        metadata: {}
+        metadata: {},
+        journal: journal.list()
       };
 
       if (error.code === "CONFIRMATION_REQUIRED") {
@@ -59,12 +66,22 @@ function createPipelineExecutor(options = {}) {
         pipelineId: pipeline.id,
         code: error.code
       });
-      pipelineStore.update(pipeline.id, { status: PIPELINE_STATUS.FAILED });
+      journal.error("Pipeline Failed", {
+        pipelineId: pipeline.id,
+        code: error.code,
+        message: error.message
+      });
+      pipelineStore.update(pipeline.id, { status: PIPELINE_STATUS.FAILED, journal });
       return failed;
     }
 
     const runStep = async (step) => {
       eventEmitter.emit(ORCHESTRATOR_EVENTS.STEP_STARTED, {
+        pipelineId: pipeline.id,
+        stepId: step.id,
+        tool: step.tool
+      });
+      journal.info("Step Started", {
         pipelineId: pipeline.id,
         stepId: step.id,
         tool: step.tool
@@ -78,9 +95,19 @@ function createPipelineExecutor(options = {}) {
             pipelineId: pipeline.id,
             stepId: step.id
           });
+          journal.warn("Confirmation Required", {
+            pipelineId: pipeline.id,
+            stepId: step.id,
+            code: error.code
+          });
         }
 
         eventEmitter.emit(ORCHESTRATOR_EVENTS.PERMISSION_DENIED, {
+          pipelineId: pipeline.id,
+          stepId: step.id,
+          code: error.code
+        });
+        journal.warn("Permission Denied", {
           pipelineId: pipeline.id,
           stepId: step.id,
           code: error.code
@@ -102,6 +129,12 @@ function createPipelineExecutor(options = {}) {
           stepId: step.id,
           code: error.code
         });
+        journal.error("Step Failed", {
+          pipelineId: pipeline.id,
+          stepId: step.id,
+          code: error.code,
+          message: error.message
+        });
 
         return deniedResult;
       }
@@ -114,11 +147,23 @@ function createPipelineExecutor(options = {}) {
             attempt,
             code: error.code || "STEP_RETRY"
           });
+          journal.warn("Step Retried", {
+            pipelineId: pipeline.id,
+            stepId: step.id,
+            attempt,
+            code: error.code || "STEP_RETRY",
+            message: error.message
+          });
         }
       });
 
       if (stepResult.status === "completed") {
         eventEmitter.emit(ORCHESTRATOR_EVENTS.STEP_COMPLETED, {
+          pipelineId: pipeline.id,
+          stepId: step.id,
+          durationMs: stepResult.durationMs
+        });
+        journal.info("Step Completed", {
           pipelineId: pipeline.id,
           stepId: step.id,
           durationMs: stepResult.durationMs
@@ -129,8 +174,18 @@ function createPipelineExecutor(options = {}) {
           stepId: step.id,
           code: stepResult.error && stepResult.error.code
         });
+        journal.error("Step Failed", {
+          pipelineId: pipeline.id,
+          stepId: step.id,
+          code: stepResult.error && stepResult.error.code,
+          message: stepResult.error && stepResult.error.message
+        });
         if (stepResult.rollback && stepResult.rollback.rolledBack) {
           eventEmitter.emit(ORCHESTRATOR_EVENTS.STEP_ROLLED_BACK, {
+            pipelineId: pipeline.id,
+            stepId: step.id
+          });
+          journal.warn("Step Rolled Back", {
             pipelineId: pipeline.id,
             stepId: step.id
           });
@@ -150,13 +205,24 @@ function createPipelineExecutor(options = {}) {
 
     pipelineStore.update(pipeline.id, {
       status,
-      steps: stepResults
+      steps: stepResults,
+      journal
     });
 
     if (status === PIPELINE_STATUS.COMPLETED) {
       eventEmitter.emit(ORCHESTRATOR_EVENTS.PIPELINE_COMPLETED, { pipelineId: pipeline.id });
+      journal.info("Pipeline Completed", {
+        pipelineId: pipeline.id,
+        durationMs: Date.now() - startedAt,
+        stepCount: stepResults.length
+      });
     } else {
       eventEmitter.emit(ORCHESTRATOR_EVENTS.PIPELINE_FAILED, { pipelineId: pipeline.id });
+      journal.error("Pipeline Failed", {
+        pipelineId: pipeline.id,
+        code: "PIPELINE_FAILED",
+        stepCount: stepResults.length
+      });
     }
 
     return {
@@ -169,7 +235,8 @@ function createPipelineExecutor(options = {}) {
       metadata: {
         strategy,
         stepCount: stepResults.length
-      }
+      },
+      journal: journal.list()
     };
   }
 

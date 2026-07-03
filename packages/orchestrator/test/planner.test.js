@@ -101,6 +101,19 @@ test("dependsOn invalido", () => {
   assert.throws(() => validatePlan(plan), { code: "INVALID_STEP_DEPENDENCY" });
 });
 
+test("detecta ciclo no plano", () => {
+  const plan = normalizePlan({
+    tenantId: "t1",
+    userId: "u1",
+    steps: [
+      { id: "s1", tool: "protocol.list", dependsOn: ["s2"] },
+      { id: "s2", tool: "protocol.list", dependsOn: ["s1"] }
+    ]
+  });
+
+  assert.throws(() => validatePlan(plan), { code: "PLAN_CYCLE_DETECTED" });
+});
+
 test("runtime context default role e locale", () => {
   const runtime = createRuntimeContext({
     tenantId: "t1",

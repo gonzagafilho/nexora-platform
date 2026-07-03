@@ -1,6 +1,7 @@
 const { createExecutionPlanner } = require("../planner/executionPlanner");
 const { createPipelineExecutor } = require("../executor/pipelineExecutor");
 const { createRuntimeContext } = require("../contracts/runtimeContextContract");
+const { createPipeline } = require("./pipelineFactory");
 
 function createOrchestrator(options = {}) {
   const planner = options.planner || createExecutionPlanner();
@@ -28,5 +29,6 @@ function createOrchestrator(options = {}) {
 }
 
 module.exports = {
-  createOrchestrator
+  createOrchestrator,
+  createPipeline
 };

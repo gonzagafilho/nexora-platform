@@ -19,6 +19,14 @@ Orquestrar planos de execucao de forma generica, sem acoplamento a app, banco ou
 
 ## Execution Plan
 
+Execution Plan e tratado como DAG (Directed Acyclic Graph):
+
+- cada step e um no
+- dependsOn define arestas entre steps
+- ciclos sao bloqueados no validator
+- ordenacao topologica define ordem segura
+- niveis de execucao agrupam steps paralelizaveis
+
 Plan:
 
 - id
@@ -72,10 +80,55 @@ Step:
 
 - cria pipeline
 - aplica policies
-- executa steps com dependsOn
+- executa steps com ordenacao DAG
 - suporta strategies sequential/parallel
 - aplica retry, timeout e rollback basico
 - emite eventos e salva pipeline no store
+
+## DAG Utilities
+
+- buildPlanGraph(plan)
+- detectCycle(plan)
+- topologicalSort(plan)
+- getExecutionLevels(plan)
+
+As strategies usam essas utilidades:
+
+- sequential usa topologicalSort
+- parallel usa getExecutionLevels
+
+## Execution Journal
+
+Cada pipeline expoe pipeline.journal para auditoria e observabilidade.
+
+API:
+
+- append(type, message, data)
+- info(message, data)
+- warn(message, data)
+- error(message, data)
+- list()
+- clear()
+
+Eventos registrados incluem:
+
+- Pipeline Started
+- Step Started
+- Step Completed
+- Step Failed
+- Step Retried
+- Step Rolled Back
+- Pipeline Completed
+- Pipeline Failed
+- Confirmation Required
+- Permission Denied
+
+Uso principal:
+
+- auditoria operacional
+- debug de execucao
+- trilha para explicabilidade futura
+- integracao com Control Center
 
 ## Policies
 
