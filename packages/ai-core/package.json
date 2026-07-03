@@ -1,11 +1,12 @@
 {
   "name": "@nexora/ai-core",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "main": "src/index.js",
   "scripts": {
-    "build": "node -e \"console.log('build: ai-core')\"",
-    "lint": "node -e \"console.log('lint: ai-core')\"",
-    "test": "node -e \"console.log('test: ai-core')\""
+    "build": "find src -name '*.js' -print0 | xargs -0 -n1 node --check",
+    "independence": "! grep -R -n -E 'associacao-bolepix|backend/src|express|mongoose|mongodb|pm2' src test",
+    "lint": "find src test -name '*.js' -print0 | xargs -0 -n1 node --check",
+    "test": "node --test test/*.test.js"
   }
 }
