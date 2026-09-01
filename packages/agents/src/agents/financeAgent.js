@@ -1,0 +1,3 @@
+const { BaseAgent }=require("./baseAgent");
+function createFinanceAgent(options={}) { return new BaseAgent({id:"finance",name:"Finance Agent",description:"Handles billing and payment requests",domain:"finance",tools:["finance.*"],capabilities:[{id:"finance.billing",name:"Cobrancas e pagamentos",description:"Cobrancas, faturas, pagamentos e bolepix",domain:"finance",intents:["cobranca","cobrancas","fatura","pagamento","bolepix"],tools:["finance.*"],confidence:1,priority:20}],metadata:{mutable:true},async execute(input,context){if(options.execute)return options.execute(input,context);return {status:"mock",domain:"finance",input};},...options}); }
+module.exports={createFinanceAgent};

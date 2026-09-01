@@ -1,0 +1,3 @@
+const { BaseAgent }=require("./baseAgent");
+function createSystemAgent(options={}) { return new BaseAgent({id:"system",name:"System Agent",description:"Provides a platform overview",domain:"system",tools:[],capabilities:["platform.status","apps.list","tools.search","memory.context"].map(id=>({id,name:id,description:id,domain:"system",intents:[id,...id.split(".")],tools:[],confidence:1,priority:10})),async execute(input,context){if(options.execute)return options.execute(input,context);return {status:"available",overview:"Platform services are available",input};},...options}); }
+module.exports={createSystemAgent};

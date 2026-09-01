@@ -1,0 +1,3 @@
+const { BaseAgent }=require("./baseAgent");
+function createNotificationAgent(options={}) { return new BaseAgent({id:"notification",name:"Notification Agent",description:"Sends notifications",domain:"notifications",tools:["notification.*"],capabilities:[{id:"notifications.send",name:"Email push e whatsapp",description:"Notificacoes por email, push e whatsapp",domain:"notifications",intents:["email","push","whatsapp","notificacao"],tools:["notification.*"],confidence:1,priority:10}],metadata:{mutable:true},async execute(input,context){if(options.execute)return options.execute(input,context);return {status:"mock",domain:"notifications",input};},...options}); }
+module.exports={createNotificationAgent};

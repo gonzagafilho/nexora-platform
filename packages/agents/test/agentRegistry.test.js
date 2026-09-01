@@ -1,0 +1,10 @@
+const test=require("node:test");const assert=require("node:assert/strict");const {createAgentRegistry,createFinanceAgent,createProtocolAgent,AgentValidationError}=require("../src");
+test("register and get",()=>{const r=createAgentRegistry();r.register(createFinanceAgent());assert.equal(r.get("FINANCE").id,"finance")});
+test("list",()=>{const r=createAgentRegistry();r.register(createFinanceAgent());r.register(createProtocolAgent());assert.equal(r.list().length,2)});
+test("listByDomain",()=>{const r=createAgentRegistry();r.register(createFinanceAgent());assert.equal(r.listByDomain("finance").length,1)});
+test("listEnabled",()=>{const r=createAgentRegistry();r.register(createFinanceAgent());r.disable("finance");assert.equal(r.listEnabled().length,0)});
+test("search",()=>{const r=createAgentRegistry();r.register(createFinanceAgent());assert.equal(r.search("billing")[0].id,"finance")});
+test("findByCapability",()=>{const r=createAgentRegistry();r.register(createFinanceAgent());assert.equal(r.findByCapability("cobranca")[0].id,"finance")});
+test("enable and disable",()=>{const r=createAgentRegistry();r.register(createFinanceAgent());assert.equal(r.disable("finance").enabled,false);assert.equal(r.enable("finance").enabled,true)});
+test("unregister",()=>{const r=createAgentRegistry();r.register(createFinanceAgent());assert.equal(r.unregister("finance").id,"finance");assert.equal(r.has("finance"),false)});
+test("invalid agent",()=>assert.throws(()=>createAgentRegistry().register({}),AgentValidationError));

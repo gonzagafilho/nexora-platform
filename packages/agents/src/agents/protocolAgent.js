@@ -1,0 +1,3 @@
+const { BaseAgent }=require("./baseAgent");
+function createProtocolAgent(options={}) { return new BaseAgent({id:"protocol",name:"Protocol Agent",description:"Handles protocols and approvals",domain:"protocols",tools:["protocol.*","workflow.*"],capabilities:[{id:"protocol.workflow",name:"Protocolos e aprovacao",description:"Protocolos, fluxo e aprovacao",domain:"protocols",intents:["protocolo","protocolos","fluxo","aprovacao"],tools:["protocol.*","workflow.*"],confidence:1,priority:15}],metadata:{mutable:true},async execute(input,context){if(options.execute)return options.execute(input,context);return {status:"mock",domain:"protocols",input};},...options}); }
+module.exports={createProtocolAgent};

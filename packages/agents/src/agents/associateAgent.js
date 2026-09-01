@@ -1,0 +1,3 @@
+const { BaseAgent }=require("./baseAgent");
+function createAssociateAgent(options={}) { return new BaseAgent({id:"associate",name:"Associate Agent",description:"Handles member records",domain:"associates",tools:["associate.*"],capabilities:[{id:"associates.management",name:"Associados e membros",description:"Associados, membros e cadastro",domain:"associates",intents:["associado","associados","membro","membros","cadastro"],tools:["associate.*"],confidence:1,priority:10}],metadata:{mutable:true},async execute(input,context){if(options.execute)return options.execute(input,context);return {status:"mock",domain:"associates",input};},...options}); }
+module.exports={createAssociateAgent};

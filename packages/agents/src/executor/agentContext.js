@@ -1,0 +1,2 @@
+function createAgentContext(input = {}) { return Object.freeze({ tenantId: input.tenantId, userId: input.userId, role: input.role || "user", permissions: [...(input.permissions || [])], allowedDomains: input.allowedDomains ? [...input.allowedDomains] : undefined, blockedTools: [...(input.blockedTools || [])], pipelineId: input.pipelineId, metadata: { ...(input.metadata || {}) }, memory: input.memory, tools: input.tools, orchestrator: input.orchestrator }); }
+module.exports = { createAgentContext };

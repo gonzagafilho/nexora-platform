@@ -1,0 +1,5 @@
+const test=require("node:test");const assert=require("node:assert/strict");const api=require("../src");const ctx={tenantId:"t",userId:"u",role:"admin",permissions:["*"]};function setup(){const registry=api.createAgentRegistry();[api.createFinanceAgent(),api.createProtocolAgent(),api.createNotificationAgent()].forEach(a=>registry.register(a));const executor=api.createAgentExecutor({registry});return api.createSupervisorAgent({registry,executor})}
+test("chooses finance",async()=>assert.equal((await setup().execute("segunda via da cobranca",ctx)).delegatedTo,"finance"));
+test("chooses protocol",async()=>assert.equal((await setup().execute("consultar protocolo",ctx)).delegatedTo,"protocol"));
+test("chooses notification",async()=>assert.equal((await setup().execute("enviar whatsapp",ctx)).delegatedTo,"notification"));
+test("planner scores capability",()=>{const p=api.createDelegationPlanner();assert.ok(p.score(api.createFinanceAgent(),"pagamento")>p.score(api.createProtocolAgent(),"pagamento"))});

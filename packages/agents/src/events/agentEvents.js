@@ -1,0 +1,2 @@
+const AGENT_EVENTS = Object.freeze({ REGISTERED:"AgentRegistered", UNREGISTERED:"AgentUnregistered", ENABLED:"AgentEnabled", DISABLED:"AgentDisabled", EXECUTION_STARTED:"AgentExecutionStarted", EXECUTION_SUCCEEDED:"AgentExecutionSucceeded", EXECUTION_FAILED:"AgentExecutionFailed", PERMISSION_DENIED:"AgentPermissionDenied", DELEGATED:"AgentDelegated", SUPERVISOR_DECISION_MADE:"SupervisorDecisionMade" });
+module.exports = { AGENT_EVENTS };
